@@ -51,6 +51,8 @@ class TokenCreate extends Component {
       trxNum <= 0 ||
       !startTime ||
       !endTime ||
+      new Date(startTime).getTime() < Date.now() ||
+      new Date(endTime).getTime() <= new Date(startTime).getTime() ||
       description.length === 0 ||
       url.length === 0
     ) {
@@ -80,7 +82,6 @@ class TokenCreate extends Component {
     };
 
     let { num, trxNum, name, isTokenCreated } = this.state;
-
     return (
       <main className="container pt-3">
         <div className="row">

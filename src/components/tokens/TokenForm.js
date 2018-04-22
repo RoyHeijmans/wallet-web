@@ -58,6 +58,7 @@ const renderInputField = ({
   type,
   label,
   className = "form-control",
+  max,
   meta: { touched, error, warning }
 }) => (
   <Fragment>
@@ -67,6 +68,7 @@ const renderInputField = ({
         {...input}
         type={type}
         className={className + (touched && error ? " is-invalid" : "")}
+        max={max}
       />
       {type === "checkbox" && (
         <label className="form-check-label" style={{ marginBottom: 0 }}>
@@ -94,7 +96,7 @@ class TokenForm extends Component {
       values
     } = this.props;
 
-    let exchangeRate = trxNum / num;
+    let exchangeRate = this.props.values["trxNum"] / this.props.values["num"];
     let isValid = this.props.isValid(values);
 
     return (
@@ -107,6 +109,7 @@ class TokenForm extends Component {
                 type="text"
                 name="name"
                 component={renderInputField}
+                max=""
                 label={intl.formatMessage({ id: "token_name" })}
               />
             </div>
@@ -116,6 +119,7 @@ class TokenForm extends Component {
                 name="totalSupply"
                 parse={v => Number(v)}
                 component={renderInputField}
+                max=""
                 label={intl.formatMessage({ id: "total_supply" })}
               />
               <small className="form-text text-muted">
@@ -126,9 +130,10 @@ class TokenForm extends Component {
           <div className="form-row">
             <div className="form-group col-md-12">
               <Field
-                type="text"
+                type="text"f
                 name="description"
                 component={renderInputField}
+                max=""
                 label={intl.formatMessage({ id: "description" })}
               />
               <small className="form-text text-muted">
@@ -143,6 +148,7 @@ class TokenForm extends Component {
                 name="url"
                 placeholder="http://"
                 component={renderInputField}
+                max=""
                 label={intl.formatMessage({ id: "url" })}
               />
               <small className="form-text text-muted">
@@ -162,9 +168,9 @@ class TokenForm extends Component {
             <p className="col-md-12">
               Participants will receive{" "}
               <b>
-                {<FormattedNumber value={num} />} {name || tu("token")}
+                {<FormattedNumber value={this.props.values["num"]} />} {name || tu("token")}
               </b>&nbsp; for every{" "}
-              <b>{<FormattedNumber value={trxNum} />} TRX</b>.
+              <b>{<FormattedNumber value={this.props.values["trxNum"]} />} TRX</b>.
             </p>
           </div>
 
@@ -175,6 +181,7 @@ class TokenForm extends Component {
                 name="trxNum"
                 parse={v => Number(v)}
                 component={renderInputField}
+                max=""
                 label={["TRX", intl.formatMessage({ id: "amount" })]}
               />
             </div>
@@ -184,6 +191,7 @@ class TokenForm extends Component {
                 name="num"
                 parse={v => Number(v)}
                 component={renderInputField}
+                max=""
                 label={[
                   intl.formatMessage({ id: "token" }),
                   intl.formatMessage({ id: "amount" })
@@ -216,6 +224,7 @@ class TokenForm extends Component {
                 type="datetime-local"
                 name="startTime"
                 component={renderInputField}
+                max="9999-12-31T23:59"
                 label={intl.formatMessage({ id: "start_date" })}
               />
             </div>
@@ -224,6 +233,7 @@ class TokenForm extends Component {
                 type="datetime-local"
                 name="endTime"
                 component={renderInputField}
+                max="9999-12-31T23:59"
                 label={intl.formatMessage({ id: "end_date" })}
               />
             </div>
@@ -238,6 +248,7 @@ class TokenForm extends Component {
               className="form-check-input"
               parse={v => Boolean(v)}
               component={renderInputField}
+              max=""
               label={intl.formatMessage({ id: "token_spend_confirm" })}
             />
           </div>
@@ -252,8 +263,7 @@ class TokenForm extends Component {
             <button
               disabled={!isValid || submitting}
               type="submit"
-              className="btn btn-success"
-            >
+              className="btn btn-success">
               {tu("issue_token")}
             </button>
           </div>
